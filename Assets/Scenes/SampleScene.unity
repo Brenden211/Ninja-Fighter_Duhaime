@@ -252,6 +252,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  jumpForce: 0
+  cellingCheck: {fileID: 0}
 --- !u!212 &691139893
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -292,7 +294,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: eaaa17a68382f5e43939293ae06d6b41, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a34a83caf4cc1fb44aa991c49c05281c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
