@@ -5,7 +5,7 @@ public class CharacterController2D : MonoBehaviour
 {
 	AudioSource Jump;
 
-	void Start()
+	private void Start()
 	{
 		Jump = GetComponent<AudioSource>();
 	}
@@ -17,7 +17,7 @@ public class CharacterController2D : MonoBehaviour
 	[SerializeField] private Transform GroundCheck;
 
 	const float GroundedRadius = .2f;
-	private bool Grounded;
+	public bool Grounded;
 	private Rigidbody2D Rigidbody2D;
 	private bool FacingRight = true;
 	private Vector3 velocity = Vector3.zero;
@@ -31,6 +31,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		Grounded = false;
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(GroundCheck.position, GroundedRadius, WhatIsGround);
+
 		for (int i = 0; i < colliders.Length; i++)
 		{
 			if (colliders[i].gameObject != gameObject)
@@ -55,10 +56,11 @@ public class CharacterController2D : MonoBehaviour
 			}
 
 		}
+
 		if (Grounded && jump)
 		{
-			Grounded = false;
 			Rigidbody2D.AddForce(new Vector2(0f, JumpForce));
+			Grounded = false;
 		}
 	}
 

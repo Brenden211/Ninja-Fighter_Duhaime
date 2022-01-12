@@ -5,31 +5,71 @@ using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
+	public float moveSpeed;
+    public float jumpForce;
+    public Transform cellingCheck;
 
-	public CharacterController2D controller;
+    private Rigidbody2D rb;
+	private bool facingRight = true;
+	private float moveDirection;
+    private bool isJumping = false;
 
-	public float Speed = 40f;
+    private void Awake()
+    {
+		rb = GetComponent<Rigidbody2D>();
+    }
 
-	float horizontalMove = 0f;
 
-	bool jump = false;
+    void Update()
+    {
+        ProcessInputs();
 
-	void Update()
-	{
+        Animate();
+    }
 
-		horizontalMove = Input.GetAxisRaw("Horizontal") * Speed;
+    private void FixedUpdate()
+    {
+        Move();
+    }
 
-		if (Input.GetButtonDown("Jump"))
-		{
-			jump = true;
-		}
-	}
+    private void Move()
+    {
+        rb.velocity = new Vector2(moveDirection * moveSpeed, rb.velocity.y);
 
-	void FixedUpdate()
-	{
-		controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
-		jump = false;
-	}
+        if (isJumping)
+        {
+            rb.AddForce(new Vector2(0f, jumpForce));
+        }
+
+        isJumping = false;
+    }
+
+    private void Animate()
+    {
+        if (moveDirection > 0 && !facingRight)
+        {
+            FlipCharacter();
+        }
+        else if (moveDirection < 0 && facingRight)
+        {
+            FlipCharacter();
+        }
+    }
+
+    private void ProcessInputs()
+    {
+        moveDirection = Input.GetAxis("Horizontal");
+        if (Input.GetButtonDown("Jump"))
+        {
+            isJumping = true;
+        }
+    }
+
+    private void FlipCharacter()
+    {
+		facingRight = !facingRight;
+		transform.Rotate(0f, 180f, 0f);
+    }
 }
 
 
