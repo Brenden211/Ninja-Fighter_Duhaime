@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
 	private float moveDirection;
     private bool isJumping = false;
     private bool isGrounded;
-    private int jumpCount;
+    public int jumpCount;
 
     private void Awake()
     {
@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = new Vector2(moveDirection * moveSpeed, rb.velocity.y);
 
-        if (isJumping)
+        if (isJumping && jumpCount > 0)
         {
             rb.AddForce(new Vector2(0f, jumpForce));
             jumpCount--;
