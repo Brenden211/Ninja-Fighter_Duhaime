@@ -5,24 +5,25 @@ using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
-	public float moveSpeed;
+    public float moveSpeed;
     public float jumpForce;
     public float checkRadius;
     public int maxJumpCount;
     public Transform cellingCheck;
     public Transform groundCheck;
     public LayerMask groundObjects;
+    public Animator animator;
 
     private Rigidbody2D rb;
-	private bool facingRight = true;
-	private float moveDirection;
+    private bool facingRight = true;
+    private float moveDirection;
     private bool isJumping = false;
     private bool isGrounded;
     public int jumpCount;
 
     private void Awake()
     {
-		rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
     public void Start()
     {
@@ -31,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        animator.SetFloat("Speed", Mathf.Abs(moveDirection));
+
         ProcessInputs();
 
         Animate();
@@ -43,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded)
         {
             jumpCount = maxJumpCount;
+            animator.SetBool("Jump", false);
         }
 
         Move();
@@ -54,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isJumping && jumpCount > 0)
         {
+            animator.SetBool("Jump", true);
             rb.AddForce(new Vector2(0f, jumpForce));
             jumpCount--;
         }
