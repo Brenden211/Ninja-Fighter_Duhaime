@@ -13,13 +13,13 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public LayerMask groundObjects;
     public Animator animator;
+    public bool isGrounded;
+    public int jumpCount;
 
     private Rigidbody2D rb;
     private bool facingRight = true;
     private float moveDirection;
     private bool isJumping = false;
-    private bool isGrounded;
-    public int jumpCount;
 
     private void Awake()
     {
@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = new Vector2(moveDirection * moveSpeed, rb.velocity.y);
 
-        if (isJumping && jumpCount > 0)
+        if (isJumping)
         {
             animator.SetBool("Jump", true);
             rb.AddForce(new Vector2(0f, jumpForce));
