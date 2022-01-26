@@ -15,11 +15,17 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator;
     public bool isGrounded;
     public int jumpCount;
+    public Transform AttackCheck;
+    public float AttackRange = 0.5f;
+    public LayerMask enemy;
+    public int AttackDamage = 20;
+    public float AttackRate = 2f;
 
     private Rigidbody2D rb;
     private bool facingRight = true;
     private float moveDirection;
     private bool isJumping = false;
+    private float NextAttackTime = 0f;
 
     private void Awake()
     {
@@ -32,11 +38,21 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (Time.time >= NextAttackTime)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0) && (isGrounded))
+            {
+                Attack();
+                NextAttackTime = Time.time + 1f / AttackRate;
+            }
+        }
+
         animator.SetFloat("Speed", Mathf.Abs(moveDirection));
 
         ProcessInputs();
 
         Animate();
+
     }
 
     private void FixedUpdate()
@@ -47,6 +63,11 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpCount = maxJumpCount;
             animator.SetBool("Jump", false);
+        }
+
+        if (!isGrounded)
+        {
+            animator.SetBool("Jump", true);
         }
 
         Move();
@@ -92,6 +113,18 @@ public class PlayerMovement : MonoBehaviour
     {
 		facingRight = !facingRight;
 		transform.Rotate(0f, 180f, 0f);
+    }
+
+    void Attack()
+    {
+        animator.SetTrigger("Attack");
+
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackCheck.position, AttackRange, enemy);
+
+        foreach(Collider2D enemy in hitEnemies)
+        {
+            enemy.GetComponent<Health>().TakeDamage(AttackDamage);
+        }
     }
 }
 
