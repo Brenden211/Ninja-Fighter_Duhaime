@@ -10,6 +10,7 @@ public class Patrol : MonoBehaviour
     public Transform groundCheckPos;
     public LayerMask groundLayer;
     public Collider2D bodyCollider;
+    public PlayerMovement player;
 
     private bool mustFlip;
 
@@ -32,6 +33,14 @@ public class Patrol : MonoBehaviour
         if (mustPatrol)
         {
             mustFlip = !Physics2D.OverlapCircle(groundCheckPos.position, 0.1f, groundLayer);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") || (other.gameObject.layer == LayerMask.NameToLayer("Player")))
+        {
+            player.TakeDamage(player.AttackDamage);
         }
     }
 

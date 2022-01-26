@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce;
     public float checkRadius;
     public int maxJumpCount;
-    public Transform cellingCheck;
     public Transform groundCheck;
     public LayerMask groundObjects;
     public Animator animator;
@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
     public HealthBar healthBar;
+
+    
 
     private Rigidbody2D rb;
     private bool facingRight = true;
@@ -41,6 +43,8 @@ public class PlayerMovement : MonoBehaviour
         currentHealth = maxHealth;
 
         healthBar.SetMaxHealth(maxHealth);
+
+        moveSpeed = 4;
     }
 
     void Update()
@@ -125,21 +129,35 @@ public class PlayerMovement : MonoBehaviour
 
     void Attack()
     {
+        moveSpeed = 0;
         animator.SetTrigger("Attack");
-
+        
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackCheck.position, AttackRange, enemy);
 
         foreach(Collider2D enemy in hitEnemies)
         {
             enemy.GetComponent<Health>().TakeDamage(AttackDamage);
         }
+
+        moveSpeed = 4;
     }
 
-    void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
+        animator.SetTrigger("Hurt");
         currentHealth -= damage;
 
         healthBar.SetHealth(currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        SceneManager.LoadScene("GameLost");
     }
 }
 

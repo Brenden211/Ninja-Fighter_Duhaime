@@ -6,6 +6,8 @@ public class Health : MonoBehaviour
 {
     public int maxHealth = 100;
 
+    public Patrol patrol;
+
     int currentHealth;
 
     public Animator animator;
@@ -17,9 +19,11 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        patrol.walkSpeed = 0;
+        animator.SetTrigger("Hurt");
         currentHealth -= damage;
 
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -27,9 +31,11 @@ public class Health : MonoBehaviour
 
     void Die()
     {
-        animator.SetBool("Dead", true);
-
+        patrol.walkSpeed = 0;
+        animator.SetTrigger("Dead");
         GetComponent<Collider2D>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
         this.enabled = false;
     }
 }
