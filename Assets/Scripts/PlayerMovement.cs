@@ -19,7 +19,10 @@ public class PlayerMovement : MonoBehaviour
     public float AttackRange = 0.5f;
     public LayerMask enemy;
     public int AttackDamage = 20;
-    public float AttackRate = 2f;
+    public float AttackRate = 2;
+    public int maxHealth = 100;
+    public int currentHealth;
+    public HealthBar healthBar;
 
     private Rigidbody2D rb;
     private bool facingRight = true;
@@ -34,6 +37,10 @@ public class PlayerMovement : MonoBehaviour
     public void Start()
     {
         jumpCount = maxJumpCount;
+
+        currentHealth = maxHealth;
+
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     void Update()
@@ -106,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && jumpCount > 0)
         {
             isJumping = true;
+            jumpCount--;
         }
     }
 
@@ -125,6 +133,13 @@ public class PlayerMovement : MonoBehaviour
         {
             enemy.GetComponent<Health>().TakeDamage(AttackDamage);
         }
+    }
+
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        healthBar.SetHealth(currentHealth);
     }
 }
 
